@@ -1,6 +1,29 @@
+import { useEffect, useState } from 'react';
 import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Index() {
+  const [timer, setTimer] = useState(90);
+  const [timerRunning, setTimerRunning] = useState(false);
+
+  function fmtMSS(s: number) {
+    return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
+  }
+
+  useEffect(() => {
+    if (!timerRunning) return;
+    const intervalId = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalId);
+          setTimerRunning(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [timerRunning]);
+
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
@@ -35,7 +58,7 @@ export default function Index() {
               letterSpacing: 2,
             }}
           >
-            00:00
+            {fmtMSS(timer)}
           </Text>
         </View>
 
@@ -73,12 +96,13 @@ export default function Index() {
                 fontWeight: '600',
               }}
             >
-              01:15 ▼
+              01:30 ▼
             </Text>
           </TouchableOpacity>
 
           <View style={{ gap: 16, width: '100%', maxWidth: 320 }}>
             <TouchableOpacity
+              onPress={() => setTimerRunning(!timerRunning)}
               style={{
                 backgroundColor: colors.success,
                 height: 60,
