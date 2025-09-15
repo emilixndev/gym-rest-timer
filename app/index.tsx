@@ -104,7 +104,7 @@ export default function Index() {
             <TouchableOpacity
               onPress={() => setTimerRunning(!timerRunning)}
               style={{
-                backgroundColor: colors.success,
+                backgroundColor: timerRunning ? colors.warning : colors.success,
                 height: 60,
                 borderRadius: 12,
                 justifyContent: 'center',
@@ -117,15 +117,27 @@ export default function Index() {
                 elevation: 8,
               }}
             >
-              <Text
-                style={{
-                  color: '#FFFFFF',
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                }}
-              >
-                {'▶️ START'}
-              </Text>
+              {timerRunning ? (
+                <Text
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {'⏹️ STOP'}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {'▶️ START'}
+                </Text>
+              )}
             </TouchableOpacity>
 
             <View style={{ flexDirection: 'row', gap: 12 }}>
@@ -144,32 +156,9 @@ export default function Index() {
                     shadowRadius: 8,
                     elevation: 8,
                   }}
-                >
-                  <Text
-                    style={{
-                      color: '#FFFFFF',
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {'🔄 RESET'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ flex: 1 }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: colors.secondary,
-                    height: 50,
-                    borderRadius: 12,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    opacity: 1,
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 8,
-                    elevation: 8,
+                  onPress={() => {
+                    setTimer(90);
+                    setTimerRunning(false);
                   }}
                 >
                   <Text
@@ -179,7 +168,7 @@ export default function Index() {
                       fontWeight: 'bold',
                     }}
                   >
-                    {'⏹️ STOP'}
+                    {'🔄 RESET'}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -200,6 +189,14 @@ export default function Index() {
                     shadowOpacity: 0.3,
                     shadowRadius: 8,
                     elevation: 8,
+                  }}
+                  onPress={() => {
+                    setTimer((prevState: number): number => {
+                      if (prevState <= 15) {
+                        return 0;
+                      }
+                      return prevState - 15;
+                    });
                   }}
                 >
                   <Text
@@ -227,6 +224,11 @@ export default function Index() {
                     shadowOpacity: 0.3,
                     shadowRadius: 8,
                     elevation: 8,
+                  }}
+                  onPress={() => {
+                    setTimer((prevState: number): number => {
+                      return prevState + 15;
+                    });
                   }}
                 >
                   <Text
